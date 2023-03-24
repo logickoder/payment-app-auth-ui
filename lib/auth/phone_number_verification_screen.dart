@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../common/configuration/app_resources.dart';
+import '../common/configuration/app_routes.dart';
 import '../common/widgets/button.dart';
+import 'common.dart';
 
 class PhoneNumberVerificationScreen extends StatelessWidget {
   const PhoneNumberVerificationScreen({Key? key}) : super(key: key);
@@ -14,24 +16,7 @@ class PhoneNumberVerificationScreen extends StatelessWidget {
     final theme = Theme.of(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: Icon(
-            Icons.keyboard_arrow_left,
-            color: theme.textTheme.bodyMedium?.color,
-          ),
-        ),
-        title: Text(
-          'Create Account',
-          style: theme.textTheme.bodyMedium?.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        centerTitle: true,
-        elevation: 0,
-        backgroundColor: theme.scaffoldBackgroundColor,
-      ),
+      appBar: AuthAppBar(onBack: () => Navigator.pop(context)),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(
@@ -50,7 +35,11 @@ class PhoneNumberVerificationScreen extends StatelessWidget {
               const Spacer(flex: 1),
               const _VerificationInput(phoneNumber: '+1 709 200 1200'),
               const Spacer(flex: 9),
-              Button(text: 'Continue', onClick: () {}),
+              Button(
+                  text: 'Continue',
+                  onClick: () {
+                    Navigator.pushNamed(context, AppRoutes.login);
+                  }),
             ],
           ),
         ),

@@ -4,7 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:url_launcher/url_launcher_string.dart';
+import 'package:payment_app_auth_ui/auth/common.dart';
 
 import '../common/configuration/app_resources.dart';
 import '../common/configuration/app_routes.dart';
@@ -41,56 +41,7 @@ class PhoneNumberInputScreen extends StatelessWidget {
               const Spacer(flex: 1),
               const _NumberInput(),
               const Spacer(flex: 1),
-              RichText(
-                text: TextSpan(
-                  text: 'By continuing, you agree to the Paytrybe ',
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: null,
-                  ),
-                  children: [
-                    TextSpan(
-                      text: 'Platform Terms & Conditions,',
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () async => await launchUrlString(
-                          'https://neofinancial.com/platform-policy',
-                        ),
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        decoration: TextDecoration.underline,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const TextSpan(text: ' '),
-                    TextSpan(
-                      text: 'Rewards Policy',
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () async => await launchUrlString(
-                          'https://neofinancial.com/rewards-policy',
-                        ),
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        decoration: TextDecoration.underline,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    TextSpan(
-                      text: ' and ',
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: null,
-                      ),
-                    ),
-                    TextSpan(
-                      text: 'Privacy Policy.',
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () async => await launchUrlString(
-                          'https://neofinancial.com/privacy-policy',
-                            ),
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        decoration: TextDecoration.underline,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              const AuthTermsAndConditions(),
               const Spacer(flex: 8),
               Button(
                 text: 'Continue',
