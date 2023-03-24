@@ -5,6 +5,7 @@ class AppPadding {
   static const medium = small * 2;
   static const normal = small * 3;
   static const large = small * 4;
+  static const extraLarge = small * 5;
 }
 
 class AppFonts {

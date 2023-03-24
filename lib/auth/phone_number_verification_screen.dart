@@ -16,16 +16,16 @@ class PhoneNumberVerificationScreen extends StatelessWidget {
     final theme = Theme.of(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AuthAppBar(onBack: () => Navigator.pop(context)),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(
-            vertical: AppPadding.large,
             horizontal: AppPadding.medium,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              AuthAppBar(onBack: () => Navigator.pop(context)),
+              const SizedBox(height: AppPadding.extraLarge),
               Text(
                 'Verify Phone Number',
                 style: theme.textTheme.headlineSmall?.copyWith(
@@ -36,10 +36,12 @@ class PhoneNumberVerificationScreen extends StatelessWidget {
               const _VerificationInput(phoneNumber: '+1 709 200 1200'),
               const Spacer(flex: 9),
               Button(
-                  text: 'Continue',
-                  onClick: () {
-                    Navigator.pushNamed(context, AppRoutes.login);
-                  }),
+                text: 'Continue',
+                onClick: () {
+                  Navigator.pushNamed(context, AppRoutes.login);
+                },
+              ),
+              const SizedBox(height: AppPadding.extraLarge),
             ],
           ),
         ),

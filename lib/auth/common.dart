@@ -2,7 +2,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-class AuthAppBar extends StatelessWidget with PreferredSizeWidget {
+import '../common/configuration/app_resources.dart';
+
+class AuthAppBar extends StatelessWidget {
   const AuthAppBar({Key? key, this.onBack}) : super(key: key);
 
   final VoidCallback? onBack;
@@ -10,30 +12,44 @@ class AuthAppBar extends StatelessWidget with PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return AppBar(
-      leading: onBack != null
-          ? IconButton(
-              onPressed: onBack,
-              icon: Icon(
-                Icons.keyboard_arrow_left,
-                color: theme.textTheme.bodyMedium?.color,
+    return SizedBox(
+      height: 56,
+      child: Stack(
+        children: [
+          if (onBack != null)
+            Align(
+              alignment: Alignment.centerLeft,
+              child: InkWell(
+                onTap: onBack,
+                child: Container(
+                  padding: const EdgeInsets.all(AppPadding.small / 2),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: theme.textTheme.bodyMedium?.color ?? Colors.black,
+                    ),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.keyboard_arrow_left,
+                    color: theme.textTheme.bodyMedium?.color,
+                  ),
+                ),
               ),
-            )
-          : null,
-      title: Text(
-        'Create Account',
-        style: theme.textTheme.bodyMedium?.copyWith(
-          fontWeight: FontWeight.w600,
-        ),
+            ),
+          Align(
+            alignment: Alignment.center,
+            child: Text(
+              'Create Account',
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
       ),
-      centerTitle: true,
-      elevation: 0,
-      backgroundColor: theme.scaffoldBackgroundColor,
     );
   }
-
-  @override
-  Size get preferredSize => const Size(double.infinity, 56);
 }
 
 class AuthTermsAndConditions extends StatelessWidget {

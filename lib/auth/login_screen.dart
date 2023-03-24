@@ -14,16 +14,16 @@ class LoginScreen extends StatelessWidget {
     final theme = Theme.of(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AuthAppBar(onBack: () => Navigator.pop(context)),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(
-            vertical: AppPadding.large,
             horizontal: AppPadding.medium,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              AuthAppBar(onBack: () => Navigator.pop(context)),
+              const SizedBox(height: AppPadding.extraLarge),
               Text(
                 'Email and Password',
                 style: theme.textTheme.headlineSmall?.copyWith(
@@ -40,7 +40,7 @@ class LoginScreen extends StatelessWidget {
               ),
               const SizedBox(height: AppPadding.medium),
               const PasswordInput(label: 'Password'),
-              const SizedBox(height: AppPadding.medium + AppPadding.large),
+              const SizedBox(height: AppPadding.extraLarge),
               const AuthTermsAndConditions(),
               const Spacer(flex: 1),
               Button(
@@ -52,6 +52,7 @@ class LoginScreen extends StatelessWidget {
                   );
                 },
               ),
+              const SizedBox(height: AppPadding.extraLarge),
             ],
           ),
         ),
