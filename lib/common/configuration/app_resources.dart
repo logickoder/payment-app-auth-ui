@@ -1,5 +1,12 @@
 import 'dart:ui';
 
+class AppPadding {
+  static const small = 8.0;
+  static const medium = small * 2;
+  static const normal = small * 3;
+  static const large = small * 4;
+}
+
 class AppFonts {
   static const defaultFont = 'TT-Commons';
 }

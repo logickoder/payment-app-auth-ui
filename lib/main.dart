@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'common/configuration/app_resources.dart';
 import 'common/configuration/app_routes.dart';
@@ -11,20 +12,22 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Payment App Auth UI',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        fontFamily: AppFonts.defaultFont,
-        colorScheme: const ColorScheme.light(
-          primary: AppColors.primary,
+    return ProviderScope(
+      child: MaterialApp(
+        title: 'Payment App Auth UI',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          fontFamily: AppFonts.defaultFont,
+          colorScheme: const ColorScheme.light(
+            primary: AppColors.primary,
+          ),
+          textTheme: Theme.of(context).textTheme.apply(
+                displayColor: AppColors.text,
+                bodyColor: AppColors.text,
+              ),
         ),
-        textTheme: Theme.of(context).textTheme.apply(
-              displayColor: AppColors.text,
-              bodyColor: AppColors.text,
-            ),
+        routes: AppRoutes.routes,
       ),
-      routes: AppRoutes.routes,
     );
   }
 }
