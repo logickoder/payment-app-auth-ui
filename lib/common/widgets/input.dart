@@ -39,6 +39,7 @@ class _InputState extends ConsumerState<Input> {
           child: Container(
             padding: const EdgeInsets.all(AppPadding.medium),
             decoration: BoxDecoration(
+              color: theme.colorScheme.onPrimary,
               border: Border.all(
                 color: ref.watch(_focused)
                     ? theme.textTheme.bodyMedium?.color ?? Colors.black

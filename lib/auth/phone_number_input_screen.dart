@@ -108,6 +108,8 @@ class _NumberInputState extends State<_NumberInput> {
         ),
         TextFormField(
           decoration: InputDecoration(
+            filled: true,
+            fillColor: theme.colorScheme.onPrimary,
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: theme.colorScheme.primary),
             ),
@@ -142,7 +144,7 @@ class _NumberInputState extends State<_NumberInput> {
                     ),
                   ),
                   icon:
-                      country != null ? Text(country.emoji) : const SizedBox(),
+                  country != null ? Text(country.emoji) : const SizedBox(),
                   label: Icon(
                     Icons.keyboard_arrow_down_outlined,
                     color: theme.textTheme.bodyMedium?.color ?? Colors.black,

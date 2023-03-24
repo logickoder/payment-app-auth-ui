@@ -48,7 +48,7 @@ class LoginScreen extends StatelessWidget {
                 onClick: () {
                   Navigator.pushNamed(
                     context,
-                    AppRoutes.phoneNumberVerification,
+                    AppRoutes.home,
                   );
                 },
               ),

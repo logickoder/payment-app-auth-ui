@@ -186,6 +186,7 @@ class _Input extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final focus = FocusScope.of(context);
     return TextField(
       focusNode: current,
@@ -199,6 +200,8 @@ class _Input extends StatelessWidget {
         }
       },
       decoration: InputDecoration(
+        filled: true,
+        fillColor: theme.colorScheme.onPrimary,
         border: const OutlineInputBorder(
           borderSide: BorderSide(color: Color(0xFF96A3B1)),
         ),
