@@ -10,6 +10,7 @@ import '../common/configuration/app_resources.dart';
 import '../common/configuration/app_routes.dart';
 import '../common/data/models/country.dart';
 import '../common/widgets/button.dart';
+import '../common/widgets/emoji.dart';
 
 class PhoneNumberInputScreen extends StatelessWidget {
   const PhoneNumberInputScreen({Key? key}) : super(key: key);
@@ -144,7 +145,7 @@ class _NumberInputState extends State<_NumberInput> {
                     ),
                   ),
                   icon:
-                  country != null ? Text(country.emoji) : const SizedBox(),
+                      country != null ? Emoji(country.emoji) : const SizedBox(),
                   label: Icon(
                     Icons.keyboard_arrow_down_outlined,
                     color: theme.textTheme.bodyMedium?.color ?? Colors.black,
@@ -270,7 +271,7 @@ class _CountryDialCodeSelectorState extends State<_CountryDialCodeSelector> {
                         ),
                         child: Row(
                           children: [
-                            Text(country.emoji),
+                            Emoji(country.emoji),
                             const SizedBox(width: AppPadding.small),
                             Expanded(
                               child: Text(
