@@ -12,6 +12,13 @@ import '../common/data/models/country.dart';
 import '../common/widgets/button.dart';
 import '../common/widgets/emoji.dart';
 
+// load the countries from the json asset
+final countryList = FutureProvider.autoDispose((ref) async {
+  final json = await rootBundle.loadString('assets/data/countries.json');
+  final countries = jsonDecode(json) as List<dynamic>;
+  return countries.map((e) => Country.fromJson(e)).toList();
+});
+
 class PhoneNumberInputScreen extends StatelessWidget {
   const PhoneNumberInputScreen({Key? key}) : super(key: key);
 
@@ -173,12 +180,6 @@ class _CountryDialCodeSelector extends StatefulWidget {
 }
 
 class _CountryDialCodeSelectorState extends State<_CountryDialCodeSelector> {
-  // load the countries from the json asset
-  static final _countries = FutureProvider.autoDispose((ref) async {
-    final json = await rootBundle.loadString('assets/data/countries.json');
-    final countries = jsonDecode(json) as List<dynamic>;
-    return countries.map((e) => Country.fromJson(e)).toList();
-  });
 
   final _queryKey = GlobalKey<FormState>();
 
@@ -186,17 +187,17 @@ class _CountryDialCodeSelectorState extends State<_CountryDialCodeSelector> {
 
   late final _countriesQuery = StateProvider.autoDispose<List<Country>>((ref) {
     final query = ref.watch(_query);
-    final countries = ref.watch(_countries);
+    final countries = ref.watch(countryList);
 
     return countries.when(
       error: (error, stackTrace) => [],
       loading: () => [],
-      data: (countriesList) {
+      data: (countryItems) {
         if (query.isEmpty) {
-          return countriesList;
+          return countryItems;
         } else {
           final searchQuery = query.toLowerCase().trim();
-          return countriesList.where(
+          return countryItems.where(
             (country) {
               return country.name.toLowerCase().contains(searchQuery);
             },

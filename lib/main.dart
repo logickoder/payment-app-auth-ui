@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
           colorScheme: const ColorScheme.light(
             primary: AppColors.primary,
           ),
+          scaffoldBackgroundColor: const Color(0xFFF7F9FD),
           textTheme: Theme.of(context).textTheme.apply(
                 displayColor: AppColors.text,
                 bodyColor: AppColors.text,
