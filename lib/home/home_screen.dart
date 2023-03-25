@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../common/configuration/app_resources.dart';
+import '../common/widgets/bottom_bar.dart';
 import 'home_getting_started.dart';
 import 'home_header.dart';
 
@@ -26,6 +27,7 @@ class HomeScreen extends StatelessWidget {
             ),
           ],
         ),
+        bottomNavigationBar: BottomBar(),
       ),
     );
   }
