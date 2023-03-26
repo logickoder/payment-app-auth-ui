@@ -55,7 +55,7 @@ class _PhoneNumberVerificationScreenState
                 text: 'Continue',
                 onClick: () {
                   if (_form.currentState?.validate() == true) {
-                    Navigator.pushNamed(context, AppRoutes.login);
+                    Navigator.pushNamed(context, AppRoutes.createAccount);
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
