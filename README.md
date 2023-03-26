@@ -47,4 +47,4 @@ sure to follow the existing code conventions and try to include tests with your 
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the LICENSE.md file for details.
