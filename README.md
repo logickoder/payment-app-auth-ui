@@ -15,6 +15,14 @@ applications for iOS and Android.
 - Form validation for all fields to ensure accurate user input.
 - Well-structured codebase that is easy to understand and maintain.
 
+## Screenshot
+
+![screenshot-1](screenshots/screenshot-1.jpg "Phone Number Input Screen")
+![screenshot-2](screenshots/screenshot-2.jpg "Verify Phone Number Screen")
+![screenshot-3](screenshots/screenshot-3.jpg "Verify Phone Number Screen Filled")
+![screenshot-4](screenshots/screenshot-4.jpg "Create Account Screen")
+![screenshot-5](screenshots/screenshot-5.jpg "Home Screen")
+
 ## Installation
 
 Clone the repository from Github:
