@@ -8,12 +8,22 @@ import '../common/configuration/app_routes.dart';
 import '../common/widgets/button.dart';
 import 'common.dart';
 
-class PhoneNumberVerificationScreen extends StatelessWidget {
+class PhoneNumberVerificationScreen extends ConsumerStatefulWidget {
   const PhoneNumberVerificationScreen({Key? key}) : super(key: key);
+
+  @override
+  ConsumerState createState() => _PhoneNumberVerificationScreenState();
+}
+
+class _PhoneNumberVerificationScreenState
+    extends ConsumerState<PhoneNumberVerificationScreen> {
+  final _controllers = List.generate(6, (index) => TextEditingController());
+  final _form = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final phoneNumber = ModalRoute.of(context)?.settings.arguments as String;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
@@ -33,12 +43,28 @@ class PhoneNumberVerificationScreen extends StatelessWidget {
                 ),
               ),
               const Spacer(flex: 1),
-              const _VerificationInput(phoneNumber: '+1 709 200 1200'),
+              Form(
+                key: _form,
+                child: _VerificationInput(
+                  phoneNumber: phoneNumber,
+                  controllers: _controllers,
+                ),
+              ),
               const Spacer(flex: 9),
               Button(
                 text: 'Continue',
                 onClick: () {
-                  Navigator.pushNamed(context, AppRoutes.login);
+                  if (_form.currentState?.validate() == true) {
+                    Navigator.pushNamed(context, AppRoutes.login);
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Please input the code sent to your number',
+                        ),
+                      ),
+                    );
+                  }
                 },
               ),
               const SizedBox(height: AppPadding.extraLarge),
@@ -48,26 +74,39 @@ class PhoneNumberVerificationScreen extends StatelessWidget {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
 }
 
 class _VerificationInput extends StatefulWidget {
   const _VerificationInput({
     Key? key,
     required this.phoneNumber,
+    required this.controllers,
   }) : super(key: key);
 
   final String phoneNumber;
+  final List<TextEditingController> controllers;
 
   @override
   State<_VerificationInput> createState() => _VerificationInputState();
 }
 
 class _VerificationInputState extends State<_VerificationInput> {
-  final nodes = List.generate(6, (index) => FocusNode());
+  late final nodes = List.generate(
+    widget.controllers.length,
+    (index) => FocusNode(),
+  );
 
   static const _retryTimeout = Duration(seconds: 15);
 
-  final _retry = StateProvider((ref) => false);
+  final _retry = StateProvider((ref) => true);
 
   late final _retryCountdown = StreamProvider((ref) async* {
     final retry = ref.watch(_retry);
@@ -114,6 +153,7 @@ class _VerificationInputState extends State<_VerificationInput> {
                     horizontal: AppPadding.small / 2,
                   ),
                   child: _Input(
+                    controller: widget.controllers[index],
                     previous: previous,
                     current: nodes[index],
                     next: next,
@@ -180,39 +220,60 @@ class _Input extends StatelessWidget {
     this.previous,
     this.current,
     this.next,
+    required this.controller,
   }) : super(key: key);
 
+  final TextEditingController controller;
   final FocusNode? previous, current, next;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final focus = FocusScope.of(context);
-    return TextField(
-      focusNode: current,
-      textAlign: TextAlign.center,
-      maxLength: 1,
-      onChanged: (input) {
-        if (input.isNotEmpty) {
-          focus.requestFocus(next);
-        } else {
-          focus.requestFocus(previous);
-        }
-      },
-      decoration: InputDecoration(
-        filled: true,
-        fillColor: theme.colorScheme.onPrimary,
-        border: const OutlineInputBorder(
-          borderSide: BorderSide(color: Color(0xFF96A3B1)),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color:
-                Theme.of(context).textTheme.bodyMedium?.color ?? Colors.black,
+    return FormField<String>(validator: (value) {
+      final number = value ?? '';
+      if (number.isEmpty) {
+        return 'A code is required for this field';
+      } else {
+        return null;
+      }
+    }, builder: (state) {
+      return TextField(
+        keyboardType: TextInputType.number,
+        controller: controller,
+        focusNode: current,
+        textAlign: TextAlign.center,
+        maxLength: 1,
+        onChanged: (input) {
+          // makes sure that the input is always a number
+          if (input != '' && int.tryParse(input) == null) {
+            controller.text = '';
+            return;
+          }
+          state.didChange(input);
+          // moves to the next or previous input depending on if the user
+          // typed or cleared a number
+          if (input.isNotEmpty) {
+            focus.requestFocus(next);
+          } else {
+            focus.requestFocus(previous);
+          }
+        },
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: theme.colorScheme.onPrimary,
+          border: const OutlineInputBorder(
+            borderSide: BorderSide(color: Color(0xFF96A3B1)),
           ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color:
+                  Theme.of(context).textTheme.bodyMedium?.color ?? Colors.black,
+            ),
+          ),
+          counterText: '',
         ),
-        counterText: '',
-      ),
-    );
+      );
+    });
   }
 }
