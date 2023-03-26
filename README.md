@@ -23,6 +23,12 @@ applications for iOS and Android.
 ![screenshot-4](screenshots/screenshot-4.jpg "Create Account Screen")
 ![screenshot-5](screenshots/screenshot-5.jpg "Home Screen")
 
+## App Demo
+
+Watch the app in action by clicking on the image below:
+
+[![App Demo](screenshots/screenrecording-thumbnail.png)](screenshots/screenrecording.mp4 "App Demo")
+
 ## Installation
 
 Clone the repository from Github:
