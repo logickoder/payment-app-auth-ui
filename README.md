@@ -25,6 +25,8 @@ applications for iOS and Android.
 
 ## App Demo
 
+The apk to the app can be found in the actions tab
+
 Watch the app in action by clicking on the image below:
 
 [![App Demo](screenshots/screenrecording-thumbnail.png)](screenshots/screenrecording.mp4 "App Demo")
