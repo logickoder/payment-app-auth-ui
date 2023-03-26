@@ -2,7 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/services.dart'
+    show SystemChrome, SystemUiOverlayStyle, rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:payment_app_auth_ui/auth/common.dart';
 
@@ -40,75 +41,80 @@ class _PhoneNumberInputScreenState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        backgroundColor: theme.scaffoldBackgroundColor,
-        elevation: 0,
+    return AnnotatedRegion(
+      value: SystemUiOverlayStyle(
+        statusBarColor: theme.scaffoldBackgroundColor,
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: AppPadding.large,
-            horizontal: AppPadding.medium,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Get Started',
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const Spacer(flex: 1),
-              Form(
-                key: _form,
-                child: _NumberInput(
-                  controller: _controller,
-                  country: _country,
-                ),
-              ),
-              const Spacer(flex: 1),
-              const AuthTermsAndConditions(),
-              const Spacer(flex: 8),
-              Button(
-                text: 'Continue',
-                onClick: () {
-                  if (_form.currentState?.validate() == true) {
-                    Navigator.pushNamed(
-                      context,
-                      AppRoutes.phoneNumberVerification,
-                      arguments:
-                          '${ref.read(_country)?.dialCode} ${_controller.text}',
-                    );
-                  }
-                },
-              ),
-              const SizedBox(height: AppPadding.large),
-              SizedBox(
-                width: double.infinity,
-                child: RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                    text: 'Have an account?',
-                    style: theme.textTheme.bodyLarge?.copyWith(
-                      fontWeight: FontWeight.w500,
-                    ),
-                    children: [
-                      TextSpan(
-                        text: ' Sign in',
-                        recognizer: TapGestureRecognizer()..onTap = () {},
-                        style: theme.textTheme.bodyLarge?.copyWith(
-                          color: theme.colorScheme.primary,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          backgroundColor: theme.scaffoldBackgroundColor,
+          elevation: 0,
+        ),
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: AppPadding.large,
+              horizontal: AppPadding.medium,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Get Started',
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
-              ),
-            ],
+                const Spacer(flex: 1),
+                Form(
+                  key: _form,
+                  child: _NumberInput(
+                    controller: _controller,
+                    country: _country,
+                  ),
+                ),
+                const Spacer(flex: 1),
+                const AuthTermsAndConditions(),
+                const Spacer(flex: 8),
+                Button(
+                  text: 'Continue',
+                  onClick: () {
+                    if (_form.currentState?.validate() == true) {
+                      Navigator.pushNamed(
+                        context,
+                        AppRoutes.phoneNumberVerification,
+                        arguments:
+                            '${ref.read(_country)?.dialCode} ${_controller.text}',
+                      );
+                    }
+                  },
+                ),
+                const SizedBox(height: AppPadding.large),
+                SizedBox(
+                  width: double.infinity,
+                  child: RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                      text: 'Have an account?',
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: ' Sign in',
+                          recognizer: TapGestureRecognizer()..onTap = () {},
+                          style: theme.textTheme.bodyLarge?.copyWith(
+                            color: theme.colorScheme.primary,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../common/configuration/app_resources.dart';
 import '../common/widgets/bottom_bar.dart';
@@ -12,22 +13,27 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Theme(
       data: Theme.of(context).copyWith(primaryColor: const Color(0xFF3269FC)),
-      child: const Scaffold(
-        body: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(child: HomeHeader()),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: AppPadding.medium,
-                  vertical: AppPadding.large,
-                ),
-                child: HomeGettingStarted(),
-              ),
-            ),
-          ],
+      child: AnnotatedRegion(
+        value: SystemUiOverlayStyle(
+          statusBarColor: Theme.of(context).colorScheme.primary,
         ),
-        bottomNavigationBar: BottomBar(),
+        child: const Scaffold(
+          body: CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(child: HomeHeader()),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppPadding.medium,
+                    vertical: AppPadding.large,
+                  ),
+                  child: HomeGettingStarted(),
+                ),
+              ),
+            ],
+          ),
+          bottomNavigationBar: BottomBar(),
+        ),
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../common/configuration/app_resources.dart';
@@ -24,51 +25,56 @@ class _PhoneNumberVerificationScreenState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final phoneNumber = ModalRoute.of(context)?.settings.arguments as String;
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppPadding.medium,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AuthAppBar(onBack: () => Navigator.pop(context)),
-              const SizedBox(height: AppPadding.extraLarge),
-              Text(
-                'Verify Phone Number',
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w500,
+    return AnnotatedRegion(
+      value: SystemUiOverlayStyle(
+        statusBarColor: theme.scaffoldBackgroundColor,
+      ),
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppPadding.medium,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AuthAppBar(onBack: () => Navigator.pop(context)),
+                const SizedBox(height: AppPadding.extraLarge),
+                Text(
+                  'Verify Phone Number',
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
-              const Spacer(flex: 1),
-              Form(
-                key: _form,
-                child: _VerificationInput(
-                  phoneNumber: phoneNumber,
-                  controllers: _controllers,
+                const Spacer(flex: 1),
+                Form(
+                  key: _form,
+                  child: _VerificationInput(
+                    phoneNumber: phoneNumber,
+                    controllers: _controllers,
+                  ),
                 ),
-              ),
-              const Spacer(flex: 9),
-              Button(
-                text: 'Continue',
-                onClick: () {
-                  if (_form.currentState?.validate() == true) {
-                    Navigator.pushNamed(context, AppRoutes.createAccount);
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                          'Please input the code sent to your number',
+                const Spacer(flex: 9),
+                Button(
+                  text: 'Continue',
+                  onClick: () {
+                    if (_form.currentState?.validate() == true) {
+                      Navigator.pushNamed(context, AppRoutes.createAccount);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'Please input the code sent to your number',
+                          ),
                         ),
-                      ),
-                    );
-                  }
-                },
-              ),
-              const SizedBox(height: AppPadding.extraLarge),
-            ],
+                      );
+                    }
+                  },
+                ),
+                const SizedBox(height: AppPadding.extraLarge),
+              ],
+            ),
           ),
         ),
       ),

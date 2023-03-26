@@ -73,6 +73,7 @@ class _BottomBarItem extends StatelessWidget {
             height: 24,
             colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
           ),
+          const SizedBox(height: AppPadding.small / 2),
           Text(
             title,
             style: Theme.of(context).textTheme.labelSmall?.copyWith(

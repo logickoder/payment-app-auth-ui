@@ -96,7 +96,7 @@ class _GettingStartedItem extends StatelessWidget {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              const SizedBox(width: AppPadding.small),
+              const SizedBox(height: AppPadding.small),
               Text(
                 subtitle,
                 style: theme.textTheme.bodyMedium?.copyWith(

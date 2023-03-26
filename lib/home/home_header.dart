@@ -70,11 +70,6 @@ class _HomeHeaderTop extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        statusBarColor: theme.colorScheme.primary,
-      ),
-    );
     return SafeArea(
       child: Container(
         padding: const EdgeInsets.all(AppPadding.medium),
@@ -295,16 +290,15 @@ class _HomeHeaderBottomItem extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
+          padding: const EdgeInsets.all(AppPadding.small),
           decoration: ShapeDecoration(
             shape: const CircleBorder(),
             color: theme.colorScheme.primary,
           ),
-          child: IconButton(
-            onPressed: () {},
-            icon: Icon(
-              icon,
-              color: theme.colorScheme.onPrimary,
-            ),
+          child: Icon(
+            icon,
+            size: AppPadding.medium,
+            color: theme.colorScheme.onPrimary,
           ),
         ),
         const SizedBox(height: AppPadding.small),
