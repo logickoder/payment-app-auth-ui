@@ -50,6 +50,7 @@ class _InputState extends ConsumerState<Input> {
           onTap: () => FocusScope.of(context).requestFocus(_inputFocus),
           child: FormField(
             validator: widget.validator,
+            initialValue: widget.controller?.text,
             builder: (state) {
               return Column(
                 mainAxisSize: MainAxisSize.min,
@@ -123,38 +124,5 @@ class _InputState extends ConsumerState<Input> {
   void dispose() {
     _inputFocus.dispose();
     super.dispose();
-  }
-}
-
-class PasswordInput extends ConsumerStatefulWidget {
-  const PasswordInput({
-    Key? key,
-    required this.label,
-  }) : super(key: key);
-
-  final String label;
-
-  @override
-  ConsumerState<PasswordInput> createState() => _PasswordInputState();
-}
-
-class _PasswordInputState extends ConsumerState<PasswordInput> {
-  final _isVisible = StateProvider((ref) => false);
-
-  @override
-  Widget build(BuildContext context) {
-    final isVisible = ref.watch(_isVisible);
-
-    return Input(
-      label: widget.label,
-      obscureInput: !isVisible,
-      keyboardType: isVisible ? null : TextInputType.visiblePassword,
-      trailing: InkWell(
-        onTap: () => ref.read(_isVisible.notifier).state = !isVisible,
-        child: Icon(
-          isVisible ? Icons.visibility_off : Icons.visibility,
-        ),
-      ),
-    );
   }
 }
