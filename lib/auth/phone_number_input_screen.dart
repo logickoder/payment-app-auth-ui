@@ -11,6 +11,7 @@ import '../common/configuration/app_routes.dart';
 import '../common/data/models/country.dart';
 import '../common/widgets/button.dart';
 import '../common/widgets/emoji.dart';
+import '../common/widgets/input.dart';
 
 // load the countries from the json asset
 final countryList = FutureProvider.autoDispose((ref) async {
@@ -19,12 +20,26 @@ final countryList = FutureProvider.autoDispose((ref) async {
   return countries.map((e) => Country.fromJson(e)).toList();
 });
 
-class PhoneNumberInputScreen extends StatelessWidget {
+class PhoneNumberInputScreen extends ConsumerStatefulWidget {
   const PhoneNumberInputScreen({Key? key}) : super(key: key);
+
+  @override
+  ConsumerState<PhoneNumberInputScreen> createState() =>
+      _PhoneNumberInputScreenState();
+}
+
+class _PhoneNumberInputScreenState
+    extends ConsumerState<PhoneNumberInputScreen> {
+  // holds the currently selected country
+  final _country = StateProvider<Country?>((ref) => null);
+
+  final _form = GlobalKey<FormState>();
+  final _controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -47,17 +62,27 @@ class PhoneNumberInputScreen extends StatelessWidget {
                 ),
               ),
               const Spacer(flex: 1),
-              const _NumberInput(),
+              Form(
+                key: _form,
+                child: _NumberInput(
+                  controller: _controller,
+                  country: _country,
+                ),
+              ),
               const Spacer(flex: 1),
               const AuthTermsAndConditions(),
               const Spacer(flex: 8),
               Button(
                 text: 'Continue',
                 onClick: () {
-                  Navigator.pushNamed(
-                    context,
-                    AppRoutes.phoneNumberVerification,
-                  );
+                  if (_form.currentState?.validate() == true) {
+                    Navigator.pushNamed(
+                      context,
+                      AppRoutes.phoneNumberVerification,
+                      arguments:
+                          '${ref.read(_country)?.dialCode} ${_controller.text}',
+                    );
+                  }
                 },
               ),
               const SizedBox(height: AppPadding.large),
@@ -91,20 +116,26 @@ class PhoneNumberInputScreen extends StatelessWidget {
   }
 }
 
-class _NumberInput extends StatefulWidget {
-  const _NumberInput({Key? key}) : super(key: key);
+class _NumberInput extends ConsumerStatefulWidget {
+  const _NumberInput({
+    Key? key,
+    required this.controller,
+    required this.country,
+  }) : super(key: key);
+
+  final TextEditingController controller;
+  final StateProvider<Country?> country;
 
   @override
-  State<_NumberInput> createState() => _NumberInputState();
+  ConsumerState<_NumberInput> createState() => _NumberInputState();
 }
 
-class _NumberInputState extends State<_NumberInput> {
-  // holds the currently selected country
-  final _country = StateProvider.autoDispose<Country?>((ref) => null);
-
+class _NumberInputState extends ConsumerState<_NumberInput> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final country = ref.watch(widget.country);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -114,52 +145,66 @@ class _NumberInputState extends State<_NumberInput> {
             fontWeight: FontWeight.w500,
           ),
         ),
-        TextFormField(
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: theme.colorScheme.onPrimary,
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: theme.colorScheme.primary),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: theme.textTheme.bodyMedium?.color ?? Colors.black,
+        const SizedBox(height: AppPadding.small / 2),
+        Input(
+          padding: const EdgeInsets.all(AppPadding.small),
+          controller: widget.controller,
+          keyboardType: TextInputType.number,
+          style: theme.textTheme.bodyLarge?.copyWith(
+            fontWeight: FontWeight.w500,
+          ),
+          maxLength: 10,
+          validator: (value) {
+            final number = value ?? '';
+            if (country == null) {
+              return 'Please select a dialing code from the modal';
+            } else if (number.isEmpty) {
+              return 'A phone number is required';
+            } else if (int.tryParse(number) == null) {
+              return 'Only numbers are allowed in this field';
+            } else {
+              return null;
+            }
+          },
+          leading: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextButton.icon(
+                style: TextButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4),
+                    side: const BorderSide(),
+                  ),
+                ),
+                onPressed: () => showModalBottomSheet(
+                  context: context,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  builder: (ctx) => _CountryDialCodeSelector(
+                    onCountryClicked: (value) {
+                      ref.read(widget.country.notifier).state = value;
+                      Navigator.pop(ctx);
+                    },
+                  ),
+                ),
+                icon: country != null ? Emoji(country.emoji) : const SizedBox(),
+                label: Icon(
+                  Icons.keyboard_arrow_down_outlined,
+                  color: theme.textTheme.bodyMedium?.color ?? Colors.black,
+                ),
               ),
-            ),
-            prefixIcon: Consumer(builder: (_, ref, __) {
-              final country = ref.watch(_country);
-              return Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppPadding.small,
-                ),
-                child: TextButton.icon(
-                  style: TextButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
-                      side: const BorderSide(),
-                    ),
-                  ),
-                  onPressed: () => showModalBottomSheet(
-                    context: context,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    builder: (ctx) => _CountryDialCodeSelector(
-                      onCountryClicked: (value) {
-                        ref.read(_country.notifier).state = value;
-                        Navigator.pop(ctx);
-                      },
-                    ),
-                  ),
-                  icon:
-                      country != null ? Emoji(country.emoji) : const SizedBox(),
-                  label: Icon(
-                    Icons.keyboard_arrow_down_outlined,
-                    color: theme.textTheme.bodyMedium?.color ?? Colors.black,
+              if (country?.dialCode != null) ...{
+                const SizedBox(width: AppPadding.normal),
+                Text(
+                  country!.dialCode,
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
-              );
-            }),
+              },
+              const SizedBox(width: AppPadding.small),
+            ],
           ),
         ),
       ],
@@ -180,7 +225,6 @@ class _CountryDialCodeSelector extends StatefulWidget {
 }
 
 class _CountryDialCodeSelectorState extends State<_CountryDialCodeSelector> {
-
   final _queryKey = GlobalKey<FormState>();
 
   late final _query = StateProvider.autoDispose((ref) => '');

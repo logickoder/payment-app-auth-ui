@@ -6,16 +6,28 @@ import '../configuration/app_resources.dart';
 class Input extends ConsumerStatefulWidget {
   const Input({
     Key? key,
-    required this.label,
+    this.label,
+    this.controller,
     this.obscureInput = false,
+    this.padding = const EdgeInsets.all(AppPadding.medium),
+    this.leading,
     this.trailing,
     this.keyboardType,
+    this.style,
+    this.validator,
+    this.maxLength,
   }) : super(key: key);
 
-  final String label;
+  final TextEditingController? controller;
+  final String? Function(String?)? validator;
+  final String? label;
   final bool obscureInput;
   final TextInputType? keyboardType;
   final Widget? trailing;
+  final Widget? leading;
+  final EdgeInsets padding;
+  final TextStyle? style;
+  final int? maxLength;
 
   @override
   ConsumerState<Input> createState() => _InputState();
@@ -36,43 +48,71 @@ class _InputState extends ConsumerState<Input> {
         },
         child: GestureDetector(
           onTap: () => FocusScope.of(context).requestFocus(_inputFocus),
-          child: Container(
-            padding: const EdgeInsets.all(AppPadding.medium),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.onPrimary,
-              border: Border.all(
-                color: ref.watch(_focused)
-                    ? theme.textTheme.bodyMedium?.color ?? Colors.black
-                    : const Color(0xFF96A3B1),
-              ),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.label,
-                        style: theme.textTheme.labelSmall,
+          child: FormField(
+            validator: widget.validator,
+            builder: (state) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: widget.padding,
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.onPrimary,
+                      border: Border.all(
+                        color: ref.watch(_focused)
+                            ? theme.textTheme.bodyMedium?.color ?? Colors.black
+                            : const Color(0xFF96A3B1),
                       ),
-                      TextField(
-                        focusNode: _inputFocus,
-                        keyboardType: widget.keyboardType,
-                        obscureText: widget.obscureInput,
-                        decoration: const InputDecoration(
-                          isDense: true,
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.zero,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      children: [
+                        if (widget.leading != null) widget.leading!,
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (widget.label != null)
+                                Text(
+                                  widget.label!,
+                                  style: theme.textTheme.labelSmall,
+                                ),
+                              TextField(
+                                focusNode: _inputFocus,
+                                controller: widget.controller,
+                                keyboardType: widget.keyboardType,
+                                obscureText: widget.obscureInput,
+                                onChanged: (value) => state.didChange(value),
+                                decoration: const InputDecoration(
+                                  isDense: true,
+                                  border: InputBorder.none,
+                                  contentPadding: EdgeInsets.zero,
+                                  counterText: '',
+                                ),
+                                style: widget.style,
+                                maxLength: widget.maxLength,
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                        if (widget.trailing != null) widget.trailing!,
+                      ],
+                    ),
                   ),
-                ),
-                if (widget.trailing != null) widget.trailing!,
-              ],
-            ),
+                  if (state.hasError) ...{
+                    const SizedBox(height: AppPadding.small / 2),
+                    Text(
+                      state.errorText!,
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: theme.colorScheme.error,
+                      ),
+                    )
+                  },
+                ],
+              );
+            },
           ),
         ),
       ),
